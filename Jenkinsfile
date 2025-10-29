@@ -12,8 +12,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo '⚙️ Installing Python dependencies...'
-                bat 'python -m pip install --upgrade pip'
-                bat 'pip install selenium webdriver-manager'
+                bat '"C:\\Python313\\python.exe" -m pip install --upgrade pip'
+                bat '"C:\\Python313\\python.exe" -m pip install selenium webdriver-manager'
             }
         }
 
@@ -48,5 +48,6 @@ pipeline {
         }
     }
 }
+
 
 
