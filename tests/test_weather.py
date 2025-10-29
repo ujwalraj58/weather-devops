@@ -8,12 +8,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.core.utils import ChromeType
 
 
 # === AUTO-CLEAN OLD CHROMEDRIVER CACHE ===
 def clean_old_drivers():
-    """Removes cached ChromeDriver directories to force fresh install."""
+    """Removes cached ChromeDriver directories to force a fresh install."""
     user_profile = os.environ.get("USERPROFILE", "")
     wdm_path = os.path.join(user_profile, ".wdm")
     if os.path.exists(wdm_path):
@@ -29,13 +28,14 @@ def setup_driver():
     clean_old_drivers()
 
     options = Options()
-    options.add_argument("--headless=new")  # comment out for visual testing
+    options.add_argument("--headless=new")  # comment out for visible mode
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    service = Service(ChromeDriverManager(chrome_type=ChromeType.GOOGLE).install())
+    # WebDriverManager auto-detects Chrome version
+    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
     return driver
 
