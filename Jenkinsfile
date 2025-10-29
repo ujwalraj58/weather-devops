@@ -13,7 +13,7 @@ pipeline {
             steps {
                 echo '⚙️ Installing Python dependencies...'
                 bat 'python -m pip install --upgrade pip'
-                bat 'python -m pip install selenium webdriver-manager'
+                bat 'python -m pip install selenium chromedriver-autoinstaller'
             }
         }
 
@@ -41,3 +41,4 @@ pipeline {
         }
     }
 }
+
