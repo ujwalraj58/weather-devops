@@ -1,5 +1,6 @@
 import time
 import os
+import shutil
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -7,21 +8,39 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.core.utils import ChromeType
 
-# === Setup WebDriver ===
+
+# === AUTO-CLEAN OLD CHROMEDRIVER CACHE ===
+def clean_old_drivers():
+    """Removes cached ChromeDriver directories to force fresh install."""
+    user_profile = os.environ.get("USERPROFILE", "")
+    wdm_path = os.path.join(user_profile, ".wdm")
+    if os.path.exists(wdm_path):
+        print(f"🧹 Cleaning old ChromeDriver cache at: {wdm_path}")
+        shutil.rmtree(wdm_path, ignore_errors=True)
+    else:
+        print("✅ No old ChromeDriver cache found.")
+
+
+# === SETUP WEBDRIVER ===
 def setup_driver():
+    """Sets up Chrome WebDriver with the latest compatible version."""
+    clean_old_drivers()
+
     options = Options()
-    options.add_argument("--headless=new")  # comment out for visual mode
+    options.add_argument("--headless=new")  # comment out for visual testing
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
 
-    service = Service(ChromeDriverManager().install())
+    service = Service(ChromeDriverManager(chrome_type=ChromeType.GOOGLE).install())
     driver = webdriver.Chrome(service=service, options=options)
     return driver
 
 
-# === Utility: Load local weather app ===
+# === LOAD LOCAL WEATHER APP ===
 def open_weather_app(driver):
     app_path = os.path.abspath("app/index.html")
     driver.get("file://" + app_path)
@@ -30,7 +49,7 @@ def open_weather_app(driver):
     return wait
 
 
-# === TEST 1: Valid City Search ===
+# === TEST 1: VALID CITY SEARCH ===
 def test_valid_city():
     driver = setup_driver()
     wait = open_weather_app(driver)
@@ -41,8 +60,7 @@ def test_valid_city():
 
     time.sleep(4)
     city_name = driver.find_element(By.ID, "cityName").text
-
-    print(f"City Displayed: {city_name}")
+    print(f"🏙️ City Displayed: {city_name}")
     assert "London" in city_name, "City name did not update properly."
 
     temp = driver.find_element(By.ID, "temp").text
@@ -51,7 +69,7 @@ def test_valid_city():
     driver.quit()
 
 
-# === TEST 2: Empty City Field ===
+# === TEST 2: EMPTY CITY FIELD ===
 def test_empty_city():
     driver = setup_driver()
     wait = open_weather_app(driver)
@@ -61,36 +79,36 @@ def test_empty_city():
 
     alert = driver.switch_to.alert
     alert_text = alert.text
-    print(f"Alert message: {alert_text}")
+    print(f"⚠️ Alert message: {alert_text}")
     assert "enter" in alert_text.lower(), "Alert for empty city not shown."
     alert.accept()
 
     driver.quit()
 
 
-# === TEST 3: Invalid City Name ===
+# === TEST 3: INVALID CITY NAME ===
 def test_invalid_city():
     driver = setup_driver()
     wait = open_weather_app(driver)
 
     city_input = driver.find_element(By.ID, "city")
-    city_input.send_keys("asldkfjasldkfj")  # random nonsense
+    city_input.send_keys("asldkfjasldkfj")  # nonsense text
     driver.find_element(By.ID, "getBtn").click()
 
     time.sleep(3)
     try:
         alert = driver.switch_to.alert
         alert_text = alert.text
-        print(f"Alert for invalid city: {alert_text}")
+        print(f"🚫 Alert for invalid city: {alert_text}")
         assert "not found" in alert_text.lower(), "Invalid city alert missing."
         alert.accept()
-    except:
-        print("Expected alert not found for invalid city input.")
+    except Exception:
+        print("⚠️ Expected alert not found for invalid city input.")
 
     driver.quit()
 
 
-# === TEST 4: Forecast Cards Render ===
+# === TEST 4: FORECAST CARDS RENDER ===
 def test_forecast_cards():
     driver = setup_driver()
     wait = open_weather_app(driver)
@@ -101,14 +119,13 @@ def test_forecast_cards():
 
     time.sleep(5)
     forecast_cards = driver.find_elements(By.CLASS_NAME, "forecast-card")
-
-    print(f"Forecast cards found: {len(forecast_cards)}")
+    print(f"📊 Forecast cards found: {len(forecast_cards)}")
     assert len(forecast_cards) >= 5, "Forecast cards not rendered correctly."
 
     driver.quit()
 
 
-# === TEST 5: Weather Theme Application ===
+# === TEST 5: WEATHER THEME APPLICATION ===
 def test_theme_change():
     driver = setup_driver()
     wait = open_weather_app(driver)
@@ -120,7 +137,7 @@ def test_theme_change():
     time.sleep(4)
     current_weather_div = driver.find_element(By.CLASS_NAME, "current-weather")
     class_name = current_weather_div.get_attribute("class")
-    print(f"Current theme class: {class_name}")
+    print(f"🎨 Current theme class: {class_name}")
 
     assert any(
         t in class_name for t in ["sunny", "rainy", "cloudy", "stormy", "snowy", "foggy"]
@@ -129,15 +146,12 @@ def test_theme_change():
     driver.quit()
 
 
+# === RUN ALL TESTS ===
 if __name__ == "__main__":
-    print("\n Running Weather App Tests...\n")
+    print("\n🌦️ Running Weather App Tests...\n")
     test_valid_city()
     test_empty_city()
     test_invalid_city()
     test_forecast_cards()
     test_theme_change()
-    print("\n✅ All tests executed.\n")
-
-
-
-
+    print("\n✅ All tests executed successfully!\n")
