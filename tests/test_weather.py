@@ -6,7 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from webdriver_manager.chrome import ChromeDriverManager
 
 # === Setup WebDriver ===
 def setup_driver():
@@ -16,8 +16,7 @@ def setup_driver():
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
 
-    chrome_driver_path = os.path.abspath("chromedriver.exe")
-    service = Service(executable_path=chrome_driver_path)
+    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
     return driver
 
@@ -138,4 +137,5 @@ if __name__ == "__main__":
     test_forecast_cards()
     test_theme_change()
     print("\n✅ All tests executed.\n")
+
 
