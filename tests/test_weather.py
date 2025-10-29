@@ -66,6 +66,7 @@ def test_valid_city():
     temp = driver.find_element(By.ID, "temp").text
     assert "°C" in temp, "Temperature not displayed correctly."
 
+    print("Test 1 (Valid City) Passed!\n")
     driver.quit()
 
 
@@ -83,6 +84,7 @@ def test_empty_city():
     assert "enter" in alert_text.lower(), "Alert for empty city not shown."
     alert.accept()
 
+    print("Test 2 (Empty City Field) Passed!\n")
     driver.quit()
 
 
@@ -102,12 +104,14 @@ def test_invalid_city():
         print(f"Alert for invalid city: {alert_text}")
         assert "not found" in alert_text.lower(), "Invalid city alert missing."
         alert.accept()
+        print("Test 3 (Invalid City) Passed!\n")
     except Exception:
         print("Expected alert not found for invalid city input.")
 
     driver.quit()
 
-# === TEST 5: WEATHER THEME APPLICATION ===
+
+# === TEST 4: WEATHER THEME APPLICATION ===
 def test_theme_change():
     driver = setup_driver()
     open_weather_app(driver)
@@ -125,16 +129,19 @@ def test_theme_change():
         t in class_name for t in ["sunny", "rainy", "cloudy", "stormy", "snowy", "foggy"]
     ), "Weather theme not applied properly."
 
+    print("Test 4 (Weather Theme Application) Passed!\n")
     driver.quit()
 
 
 # === RUN ALL TESTS ===
 if __name__ == "__main__":
-    print("\nRunning Weather App Tests...\n")
-    test_valid_city()
-    test_empty_city()
-    test_invalid_city()
-    test_theme_change()
-    print("\nAll tests executed successfully!\n")
-
-
+    print("\nRunning Weather App Selenium Tests...\n")
+    try:
+        test_valid_city()
+        test_empty_city()
+        test_invalid_city()
+        test_theme_change()
+        print("\nAll tests executed successfully!\n")
+    except AssertionError as e:
+        print(f"Test failed: {e}")
+        exit(1)
