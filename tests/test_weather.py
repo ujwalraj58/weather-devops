@@ -154,4 +154,5 @@ if __name__ == "__main__":
     test_invalid_city()
     test_forecast_cards()
     test_theme_change()
-    print("\n✅ All tests executed successfully!\n")
+    print("\nAll tests executed successfully!\n")
+
