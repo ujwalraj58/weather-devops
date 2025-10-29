@@ -16,10 +16,10 @@ def clean_old_drivers():
     user_profile = os.environ.get("USERPROFILE", "")
     wdm_path = os.path.join(user_profile, ".wdm")
     if os.path.exists(wdm_path):
-        print(f"🧹 Cleaning old ChromeDriver cache at: {wdm_path}")
+        print(f"Cleaning old ChromeDriver cache at: {wdm_path}")
         shutil.rmtree(wdm_path, ignore_errors=True)
     else:
-        print("✅ No old ChromeDriver cache found.")
+        print("No old ChromeDriver cache found.")
 
 
 # === SETUP WEBDRIVER ===
@@ -60,7 +60,7 @@ def test_valid_city():
 
     time.sleep(4)
     city_name = driver.find_element(By.ID, "cityName").text
-    print(f"🏙️ City Displayed: {city_name}")
+    print(f"City Displayed: {city_name}")
     assert "London" in city_name, "City name did not update properly."
 
     temp = driver.find_element(By.ID, "temp").text
@@ -79,7 +79,7 @@ def test_empty_city():
 
     alert = driver.switch_to.alert
     alert_text = alert.text
-    print(f"⚠️ Alert message: {alert_text}")
+    print(f"Alert message: {alert_text}")
     assert "enter" in alert_text.lower(), "Alert for empty city not shown."
     alert.accept()
 
@@ -99,11 +99,11 @@ def test_invalid_city():
     try:
         alert = driver.switch_to.alert
         alert_text = alert.text
-        print(f"🚫 Alert for invalid city: {alert_text}")
+        print(f"Alert for invalid city: {alert_text}")
         assert "not found" in alert_text.lower(), "Invalid city alert missing."
         alert.accept()
     except Exception:
-        print("⚠️ Expected alert not found for invalid city input.")
+        print("Expected alert not found for invalid city input.")
 
     driver.quit()
 
@@ -119,7 +119,7 @@ def test_forecast_cards():
 
     time.sleep(5)
     forecast_cards = driver.find_elements(By.CLASS_NAME, "forecast-card")
-    print(f"📊 Forecast cards found: {len(forecast_cards)}")
+    print(f"Forecast cards found: {len(forecast_cards)}")
     assert len(forecast_cards) >= 5, "Forecast cards not rendered correctly."
 
     driver.quit()
@@ -137,7 +137,7 @@ def test_theme_change():
     time.sleep(4)
     current_weather_div = driver.find_element(By.CLASS_NAME, "current-weather")
     class_name = current_weather_div.get_attribute("class")
-    print(f"🎨 Current theme class: {class_name}")
+    print(f"Current theme class: {class_name}")
 
     assert any(
         t in class_name for t in ["sunny", "rainy", "cloudy", "stormy", "snowy", "foggy"]
@@ -148,10 +148,11 @@ def test_theme_change():
 
 # === RUN ALL TESTS ===
 if __name__ == "__main__":
-    print("\n🌦️ Running Weather App Tests...\n")
+    print("\nRunning Weather App Tests...\n")
     test_valid_city()
     test_empty_city()
     test_invalid_city()
     test_forecast_cards()
     test_theme_change()
-    print("\n✅ All tests executed successfully!\n")
+    print("\nAll tests executed successfully!\n")
+
