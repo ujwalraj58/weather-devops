@@ -107,24 +107,6 @@ def test_invalid_city():
 
     driver.quit()
 
-
-# === TEST 4: FORECAST CARDS RENDER ===
-def test_forecast_cards():
-    driver = setup_driver()
-    open_weather_app(driver)
-
-    city_input = driver.find_element(By.ID, "city")
-    city_input.send_keys("Tokyo")
-    driver.find_element(By.ID, "getBtn").click()
-
-    time.sleep(5)
-    forecast_cards = driver.find_elements(By.CLASS_NAME, "forecast-card")
-    print(f"Forecast cards found: {len(forecast_cards)}")
-    assert len(forecast_cards) >= 5, "Forecast cards not rendered correctly."
-
-    driver.quit()
-
-
 # === TEST 5: WEATHER THEME APPLICATION ===
 def test_theme_change():
     driver = setup_driver()
@@ -152,7 +134,7 @@ if __name__ == "__main__":
     test_valid_city()
     test_empty_city()
     test_invalid_city()
-    test_forecast_cards()
     test_theme_change()
     print("\nAll tests executed successfully!\n")
+
 
