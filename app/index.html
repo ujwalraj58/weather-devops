@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌦️ Smart Weather Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="dashboard">
+    <header>
+      <h1>🌤️ Smart Weather Dashboard</h1>
+      <div class="search-box">
+        <input type="text" id="city" placeholder="Enter city name" />
+        <button id="getBtn">Get Weather</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="current-weather">
+        <div class="weather-info">
+          <h2 id="cityName">City Name</h2>
+          <p id="dateTime">--:--</p>
+          <h1 id="temp">--°C</h1>
+          <p id="desc">--</p>
+        </div>
+        <div class="weather-icon">
+          <img id="icon" src="" alt="Weather icon" />
+        </div>
+      </section>
+
+      <section class="details">
+        <div class="card"><h3>Feels Like</h3><p id="feelsLike">--°C</p></div>
+        <div class="card"><h3>Humidity</h3><p id="humidity">--%</p></div>
+        <div class="card"><h3>Wind Speed</h3><p id="wind">-- km/h</p></div>
+        <div class="card"><h3>Sunrise</h3><p id="sunrise">--</p></div>
+        <div class="card"><h3>Sunset</h3><p id="sunset">--</p></div>
+      </section>
+      
+      <section class="forecast">
+        <h2>Next 5 Days</h2>
+        <div id="forecast" class="forecast-grid"></div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
