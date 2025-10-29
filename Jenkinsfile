@@ -4,14 +4,14 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                echo '📥 Pulling latest code from GitHub...'
+                echo 'Pulling latest code from GitHub...'
                 git branch: 'main', url: 'https://github.com/ujwalraj58/weather-devops.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                echo '⚙️ Installing Python dependencies...'
+                echo 'Installing Python dependencies...'
                 bat 'python -m pip install --upgrade pip'
                 bat 'python -m pip install selenium chromedriver-autoinstaller'
             }
@@ -19,14 +19,14 @@ pipeline {
 
         stage('Run Selenium Tests') {
             steps {
-                echo '🧪 Running automated weather app tests...'
+                echo 'Running automated weather app tests...'
                 bat 'python tests\\test_weather.py'
             }
         }
 
         stage('Archive Artifacts') {
             steps {
-                echo '📦 Archiving test results...'
+                echo 'Archiving test results...'
                 archiveArtifacts artifacts: '**/*.log', fingerprint: true
             }
         }
@@ -34,11 +34,12 @@ pipeline {
 
     post {
         success {
-            echo '✅ Build and Tests Successful!'
+            echo 'Build and Tests Successful!'
         }
         failure {
-            echo '❌ Build or Test failed. Check console output.'
+            echo 'Build or Test failed. Check console output.'
         }
     }
 }
+
 
