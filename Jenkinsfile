@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 echo '📥 Pulling latest code from GitHub...'
-                git branch: 'main', url: 'https://github.com/<ujwalraj58>/weather-devops.git'
+                git branch: 'main', url: 'https://github.com/ujwalraj58/weather-devops.git'
             }
         }
 
@@ -48,4 +48,5 @@ pipeline {
         }
     }
 }
+
 
