@@ -16,7 +16,7 @@ def setup_driver():
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
 
-    service = Service(ChromeDriverManager().install())
+    service = Service(ChromeDriverManager(driver_version="latest").install())
     driver = webdriver.Chrome(service=service, options=options)
     return driver
 
@@ -137,5 +137,6 @@ if __name__ == "__main__":
     test_forecast_cards()
     test_theme_change()
     print("\n✅ All tests executed.\n")
+
 
 
