@@ -1,13 +1,12 @@
-import time
 import os
+import time
 import shutil
+import chromedriver_autoinstaller
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
 
 
 # === AUTO-CLEAN OLD CHROMEDRIVER CACHE ===
@@ -22,21 +21,22 @@ def clean_old_drivers():
         print("No old ChromeDriver cache found.")
 
 
-# === SETUP WEBDRIVER ===
+# === SETUP WEBDRIVER (Auto Installer for Jenkins) ===
 def setup_driver():
-    """Sets up Chrome WebDriver with the latest compatible version."""
+    """Sets up Chrome WebDriver automatically matching system Chrome."""
     clean_old_drivers()
 
+    print("Checking and installing correct ChromeDriver version...")
+    chromedriver_autoinstaller.install()  # Auto-match Chrome version
+
     options = Options()
-    options.add_argument("--headless=new")  # comment out for visible mode
+    options.add_argument("--headless=new")  # Use headless mode for Jenkins
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    # WebDriverManager auto-detects Chrome version
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=options)
+    driver = webdriver.Chrome(options=options)
     return driver
 
 
@@ -52,7 +52,7 @@ def open_weather_app(driver):
 # === TEST 1: VALID CITY SEARCH ===
 def test_valid_city():
     driver = setup_driver()
-    wait = open_weather_app(driver)
+    open_weather_app(driver)
 
     city_input = driver.find_element(By.ID, "city")
     city_input.send_keys("London")
@@ -72,7 +72,7 @@ def test_valid_city():
 # === TEST 2: EMPTY CITY FIELD ===
 def test_empty_city():
     driver = setup_driver()
-    wait = open_weather_app(driver)
+    open_weather_app(driver)
 
     driver.find_element(By.ID, "getBtn").click()
     time.sleep(1)
@@ -89,10 +89,10 @@ def test_empty_city():
 # === TEST 3: INVALID CITY NAME ===
 def test_invalid_city():
     driver = setup_driver()
-    wait = open_weather_app(driver)
+    open_weather_app(driver)
 
     city_input = driver.find_element(By.ID, "city")
-    city_input.send_keys("asldkfjasldkfj")  # nonsense text
+    city_input.send_keys("asldkfjasldkfj")  # nonsense
     driver.find_element(By.ID, "getBtn").click()
 
     time.sleep(3)
@@ -111,7 +111,7 @@ def test_invalid_city():
 # === TEST 4: FORECAST CARDS RENDER ===
 def test_forecast_cards():
     driver = setup_driver()
-    wait = open_weather_app(driver)
+    open_weather_app(driver)
 
     city_input = driver.find_element(By.ID, "city")
     city_input.send_keys("Tokyo")
@@ -128,7 +128,7 @@ def test_forecast_cards():
 # === TEST 5: WEATHER THEME APPLICATION ===
 def test_theme_change():
     driver = setup_driver()
-    wait = open_weather_app(driver)
+    open_weather_app(driver)
 
     city_input = driver.find_element(By.ID, "city")
     city_input.send_keys("New York")
@@ -154,5 +154,4 @@ if __name__ == "__main__":
     test_invalid_city()
     test_forecast_cards()
     test_theme_change()
-    print("\nAll tests executed successfully!\n")
-
+    print("\n✅ All tests executed successfully!\n")
